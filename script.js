@@ -515,12 +515,23 @@ function initHeroSlider() {
   goToSlide(0);
   startSliderAuto();
 
-  // Pause on hover
-  const wrap = document.querySelector('.hero-slider-wrap');
-  if (wrap) {
-    wrap.addEventListener('mouseenter', stopSliderAuto);
-    wrap.addEventListener('mouseleave', startSliderAuto);
-  }
+  // Sidebar category click → change slide
+  document.querySelectorAll('.sidebar-list li[data-slide]').forEach(li => {
+    li.addEventListener('click', e => {
+      e.preventDefault();
+      const idx = parseInt(li.dataset.slide);
+      stopSliderAuto();
+      goToSlide(idx);
+      startSliderAuto();
+    });
+    // Also trigger on hover (mouseenter)
+    li.addEventListener('mouseenter', () => {
+      const idx = parseInt(li.dataset.slide);
+      stopSliderAuto();
+      goToSlide(idx);
+      startSliderAuto();
+    });
+  });
 
   // Touch / swipe support
   let touchStartX = 0;
@@ -535,17 +546,20 @@ function initHeroSlider() {
 }
 
 function goToSlide(n) {
-  const slides = document.querySelectorAll('.hero-slide');
-  const dots   = document.querySelectorAll('.slider-dot');
+  const slides  = document.querySelectorAll('.hero-slide');
+  const dots    = document.querySelectorAll('.slider-dot');
+  const sideItems = document.querySelectorAll('.sidebar-list li[data-slide]');
   if (!slides.length) return;
 
   slides[currentSlide]?.classList.remove('active');
   dots[currentSlide]?.classList.remove('active');
+  sideItems[currentSlide]?.classList.remove('sb-active');
 
   currentSlide = (n + slideTotal) % slideTotal;
 
   slides[currentSlide]?.classList.add('active');
   dots[currentSlide]?.classList.add('active');
+  sideItems[currentSlide]?.classList.add('sb-active');
 }
 
 function slideHero(dir) {
@@ -556,7 +570,7 @@ function slideHero(dir) {
 
 function startSliderAuto() {
   stopSliderAuto();
-  sliderTimer = setInterval(() => goToSlide(currentSlide + 1), 4500);
+  sliderTimer = setInterval(() => goToSlide(currentSlide + 1), 2000);
 }
 
 function stopSliderAuto() {
