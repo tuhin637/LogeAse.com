@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LogeAse.com — Premium E-Commerce | Bangladesh's #1 Online Store</title>
+  <meta name="description" content="LogeAse.com — Discover premium products, flash deals, and trusted shopping experience. Founded by MD Rakib Babu." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════ ANNOUNCEMENT BAR ═══════════════ -->
+  <div class="announcement-bar" id="announcementBar">
+    <div class="announce-track">
+      <span>🚀 Free Delivery on Orders Over ৳999 &nbsp;|&nbsp; 🔒 100% Secure Payment &nbsp;|&nbsp; ⭐ 4.9/5 Customer Rating &nbsp;|&nbsp; 🎁 Use Code <strong>LOGEEASE10</strong> for 10% Off &nbsp;|&nbsp; 📦 Same Day Delivery in Dhaka &nbsp;|&nbsp; 💎 Premium Quality Guaranteed &nbsp;|&nbsp; 🚀 Free Delivery on Orders Over ৳999 &nbsp;|&nbsp; 🔒 100% Secure Payment &nbsp;|&nbsp; ⭐ 4.9/5 Customer Rating</span>
+    </div>
+    <button class="announce-close" onclick="document.getElementById('announcementBar').style.display='none'">✕</button>
+  </div>
+
+  <!-- ═══════════════ STICKY HEADER ═══════════════ -->
+  <header class="header" id="mainHeader">
+    <div class="header-inner container">
+
+      <!-- Logo -->
+      <a href="#" class="logo">
+        <div class="logo-icon">L</div>
+        <div class="logo-text">
+          <span class="logo-main">LogeAse</span>
+          <span class="logo-dot">.com</span>
+        </div>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="search-wrap">
+        <select class="search-cat">
+          <option>All Categories</option>
+          <option>Electronics</option>
+          <option>Fashion</option>
+          <option>Home & Living</option>
+          <option>Beauty</option>
+          <option>Sports</option>
+        </select>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search for products, brands and more..." />
+        <button class="search-btn" onclick="handleSearch()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+        <div class="search-dropdown" id="searchDropdown"></div>
+      </div>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <button class="action-btn" onclick="toggleDark()" title="Dark Mode">
+          <svg id="darkIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="action-btn wishlist-btn" onclick="showWishlist()" title="Wishlist">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="badge" id="wishlistBadge">0</span>
+        </button>
+        <button class="action-btn cart-btn" onclick="toggleCart()" title="Cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="badge cart-badge" id="cartBadge">0</span>
+        </button>
+        <a href="#" class="action-btn user-btn" title="Account">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+      </div>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- Mega Menu Nav -->
+    <nav class="mega-nav" id="megaNav">
+      <div class="container">
+        <ul class="nav-list">
+          <li class="nav-item active"><a href="#">Home</a></li>
+          <li class="nav-item has-mega">
+            <a href="#">Shop <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></a>
+            <div class="mega-dropdown">
+              <div class="mega-col">
+                <h4>Electronics</h4>
+                <a href="#">Smartphones</a>
+                <a href="#">Laptops</a>
+                <a href="#">Tablets</a>
+                <a href="#">Smart Watches</a>
+                <a href="#">Headphones</a>
+              </div>
+              <div class="mega-col">
+                <h4>Fashion</h4>
+                <a href="#">Men's Clothing</a>
+                <a href="#">Women's Clothing</a>
+                <a href="#">Footwear</a>
+                <a href="#">Accessories</a>
+                <a href="#">Bags & Luggage</a>
+              </div>
+              <div class="mega-col">
+                <h4>Home & Living</h4>
+                <a href="#">Furniture</a>
+                <a href="#">Kitchen</a>
+                <a href="#">Decor</a>
+                <a href="#">Bedding</a>
+                <a href="#">Lighting</a>
+              </div>
+              <div class="mega-col">
+                <h4>Beauty & Health</h4>
+                <a href="#">Skincare</a>
+                <a href="#">Makeup</a>
+                <a href="#">Fragrances</a>
+                <a href="#">Health Devices</a>
+                <a href="#">Vitamins</a>
+              </div>
+              <div class="mega-promo">
+                <div class="mega-promo-card">
+                  <span class="mega-promo-tag">🔥 Flash Sale</span>
+                  <h3>Up to 70% Off</h3>
+                  <p>Premium Electronics</p>
+                  <a href="#flashsale" class="btn-sm">Shop Now</a>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-item"><a href="#flashsale">Flash Sale 🔥</a></li>
+          <li class="nav-item"><a href="#founder">About Founder</a></li>
+          <li class="nav-item"><a href="#brands">Brands</a></li>
+          <li class="nav-item"><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Mobile Nav -->
+    <div class="mobile-nav" id="mobileNav">
+      <div class="mobile-nav-inner">
+        <a href="#" class="mobile-nav-link">🏠 Home</a>
+        <a href="#" class="mobile-nav-link">🛍️ Shop</a>
+        <a href="#flashsale" class="mobile-nav-link" onclick="toggleMobileMenu()">🔥 Flash Sale</a>
+        <a href="#founder" class="mobile-nav-link" onclick="toggleMobileMenu()">👤 About Founder</a>
+        <a href="#brands" class="mobile-nav-link" onclick="toggleMobileMenu()">🏷️ Brands</a>
+        <a href="#contact" class="mobile-nav-link" onclick="toggleMobileMenu()">📞 Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════ CART DRAWER ═══════════════ -->
+  <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3>Your Cart (<span id="cartCount">0</span>)</h3>
+      <button onclick="toggleCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <p>Your cart is empty</p>
+        <button onclick="toggleCart()" class="btn-primary" style="margin-top:1rem;">Continue Shopping</button>
+      </div>
+    </div>
+    <div class="cart-footer" id="cartFooter" style="display:none">
+      <div class="cart-total">
+        <span>Total:</span>
+        <strong id="cartTotal">৳0</strong>
+      </div>
+      <button class="btn-primary full-width">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════ HERO — ShopHub Style Slider + Sidebar ═══════════════ -->
+  <section class="hero-new" id="hero">
+    <div class="container hero-new-inner">
+
+      <!-- LEFT: Category Sidebar -->
+      <div class="hero-sidebar">
+        <div class="sidebar-header">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          All Categories
+        </div>
+        <ul class="sidebar-list">
+          <li class="sb-active" data-slide="0"><a href="#"><span class="sb-icon">📱</span> Electronics <svg class="sb-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+          <li data-slide="1"><a href="#"><span class="sb-icon">👗</span> Fashion <svg class="sb-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+          <li data-slide="2"><a href="#"><span class="sb-icon">🏠</span> Home &amp; Living <svg class="sb-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+          <li data-slide="3"><a href="#"><span class="sb-icon">💄</span> Beauty &amp; Health <svg class="sb-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+          <li data-slide="4"><a href="#"><span class="sb-icon">💪</span> Sports &amp; Fitness <svg class="sb-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+          <li data-slide="5"><a href="#"><span class="sb-icon">📚</span> Books &amp; Stationery <svg class="sb-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+          <li data-slide="6"><a href="#"><span class="sb-icon">🎮</span> Gaming <svg class="sb-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+          <li data-slide="7"><a href="#"><span class="sb-icon">🍳</span> Kitchen &amp; Dining <svg class="sb-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+          <li data-slide="8"><a href="#"><span class="sb-icon">🧒</span> Baby &amp; Kids <svg class="sb-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a></li>
+          <li class="sidebar-more"><a href="#">View All Categories →</a></li>
+        </ul>
+      </div>
+
+      <!-- RIGHT: Hero Slider -->
+      <div class="hero-slider-wrap">
+        <div class="hero-slider" id="heroSlider">
+
+          <!-- Slide 0 — Electronics -->
+          <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&h=560&fit=crop&auto=format');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+              <span class="slide-badge">⚡ TECH DEALS</span>
+              <h1 class="slide-title">Smart<br/>Technology</h1>
+              <p class="slide-desc">Upgrade your life with cutting-edge electronics &amp; gadgets</p>
+              <div class="slide-btns">
+                <a href="#products" class="slide-btn-primary">Explore</a>
+                <a href="#flashsale" class="slide-btn-outline">Hot Deals</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 1 — Fashion -->
+          <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=1200&h=560&fit=crop&auto=format');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+              <span class="slide-badge">NEW ARRIVALS</span>
+              <h1 class="slide-title">Fashion<br/>Forward</h1>
+              <p class="slide-desc">Discover the latest trends in fashion and accessories</p>
+              <div class="slide-btns">
+                <a href="#products" class="slide-btn-primary">Shop Now</a>
+                <a href="#flashsale" class="slide-btn-outline">View Deals</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 2 — Home & Living -->
+          <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&h=560&fit=crop&auto=format');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+              <span class="slide-badge">⭐ BEST SELLERS</span>
+              <h1 class="slide-title">Home<br/>Luxury</h1>
+              <p class="slide-desc">Transform your space with premium home &amp; living products</p>
+              <div class="slide-btns">
+                <a href="#products" class="slide-btn-primary">Shop Now</a>
+                <a href="#flashsale" class="slide-btn-outline">View Deals</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3 — Beauty & Health -->
+          <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=1200&h=560&fit=crop&auto=format');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+              <span class="slide-badge">💎 PREMIUM</span>
+              <h1 class="slide-title">Glow<br/>Up</h1>
+              <p class="slide-desc">Korean skincare, luxury perfumes, and beauty essentials</p>
+              <div class="slide-btns">
+                <a href="#products" class="slide-btn-primary">Shop Beauty</a>
+                <a href="#flashsale" class="slide-btn-outline">Hot Deals</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 4 — Sports & Fitness -->
+          <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&h=560&fit=crop&auto=format');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+              <span class="slide-badge">💪 ACTIVE LIFE</span>
+              <h1 class="slide-title">Sports<br/>&amp; Fitness</h1>
+              <p class="slide-desc">Gear up for your best performance — equipment &amp; apparel</p>
+              <div class="slide-btns">
+                <a href="#products" class="slide-btn-primary">Shop Sports</a>
+                <a href="#flashsale" class="slide-btn-outline">View Deals</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 5 — Books & Stationery -->
+          <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1200&h=560&fit=crop&auto=format');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+              <span class="slide-badge">📖 READING TIME</span>
+              <h1 class="slide-title">Books &amp;<br/>Stationery</h1>
+              <p class="slide-desc">Discover amazing stories, knowledge, and creative supplies</p>
+              <div class="slide-btns">
+                <a href="#products" class="slide-btn-primary">Browse Books</a>
+                <a href="#flashsale" class="slide-btn-outline">Book Deals</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 6 — Gaming -->
+          <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1542549182-a8fb71f6e49c?w=1200&h=560&fit=crop&auto=format');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+              <span class="slide-badge">🎮 LEVEL UP</span>
+              <h1 class="slide-title">Gaming<br/>Zone</h1>
+              <p class="slide-desc">Level up with the latest gaming gear, consoles &amp; accessories</p>
+              <div class="slide-btns">
+                <a href="#products" class="slide-btn-primary">Game On</a>
+                <a href="#flashsale" class="slide-btn-outline">Gaming Deals</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 7 — Kitchen & Dining -->
+          <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1200&h=560&fit=crop&auto=format');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+              <span class="slide-badge">🍳 COOK SMART</span>
+              <h1 class="slide-title">Kitchen<br/>&amp; Dining</h1>
+              <p class="slide-desc">Premium cookware, appliances and dining essentials</p>
+              <div class="slide-btns">
+                <a href="#products" class="slide-btn-primary">Shop Kitchen</a>
+                <a href="#flashsale" class="slide-btn-outline">Hot Deals</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 8 — Baby & Kids -->
+          <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=1200&h=560&fit=crop&auto=format');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+              <span class="slide-badge">🧒 FOR LITTLE ONES</span>
+              <h1 class="slide-title">Baby<br/>&amp; Kids</h1>
+              <p class="slide-desc">Safe, fun and educational products for your little ones</p>
+              <div class="slide-btns">
+                <a href="#products" class="slide-btn-primary">Shop Kids</a>
+                <a href="#flashsale" class="slide-btn-outline">View Deals</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Slider Controls -->
+        <button class="slider-prev" onclick="slideHero(-1)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="slider-next" onclick="slideHero(1)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <!-- Dots -->
+        <div class="slider-dots" id="sliderDots">
+          <button class="slider-dot active" onclick="goToSlide(0)"></button>
+          <button class="slider-dot" onclick="goToSlide(1)"></button>
+          <button class="slider-dot" onclick="goToSlide(2)"></button>
+          <button class="slider-dot" onclick="goToSlide(3)"></button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Trust Strip -->
+    <div class="trust-strip">
+      <div class="container">
+        <div class="trust-badges">
+          <div class="trust-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg><span>Free Delivery ৳999+</span></div>
+          <div class="trust-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><span>100% Secure Payment</span></div>
+          <div class="trust-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>100% Authentic</span></div>
+          <div class="trust-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.45"/></svg><span>Easy 7-Day Returns</span></div>
+          <div class="trust-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 012 2.22 2 2 0 013.98 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg><span>24/7 Support</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ CATEGORIES ═══════════════ -->
+  <section class="section categories-section">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-tag">Explore</span>
+        <h2 class="section-title">Shop by Category</h2>
+        <p class="section-desc">Find everything you need in one place</p>
+      </div>
+      <div class="categories-grid" data-aos="fade-up">
+        <a href="#" class="cat-card" style="--cat-color:#2563EB">
+          <div class="cat-icon">📱</div>
+          <h3>Electronics</h3>
+          <span>2,400+ Items</span>
+        </a>
+        <a href="#" class="cat-card" style="--cat-color:#9333EA">
+          <div class="cat-icon">👗</div>
+          <h3>Fashion</h3>
+          <span>8,200+ Items</span>
+        </a>
+        <a href="#" class="cat-card" style="--cat-color:#F97316">
+          <div class="cat-icon">🏠</div>
+          <h3>Home & Living</h3>
+          <span>3,100+ Items</span>
+        </a>
+        <a href="#" class="cat-card" style="--cat-color:#EC4899">
+          <div class="cat-icon">💄</div>
+          <h3>Beauty</h3>
+          <span>1,800+ Items</span>
+        </a>
+        <a href="#" class="cat-card" style="--cat-color:#10B981">
+          <div class="cat-icon">💪</div>
+          <h3>Sports</h3>
+          <span>1,200+ Items</span>
+        </a>
+        <a href="#" class="cat-card" style="--cat-color:#06B6D4">
+          <div class="cat-icon">📚</div>
+          <h3>Books</h3>
+          <span>5,500+ Items</span>
+        </a>
+        <a href="#" class="cat-card" style="--cat-color:#D4AF37">
+          <div class="cat-icon">⌚</div>
+          <h3>Smart Gadgets</h3>
+          <span>890+ Items</span>
+        </a>
+        <a href="#" class="cat-card" style="--cat-color:#EF4444">
+          <div class="cat-icon">❤️</div>
+          <h3>Health</h3>
+          <span>640+ Items</span>
+        </a>
+        <a href="#" class="cat-card" style="--cat-color:#0F172A">
+          <div class="cat-icon">🔌</div>
+          <h3>Accessories</h3>
+          <span>3,800+ Items</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FLASH SALE ═══════════════ -->
+  <section class="section flash-sale" id="flashsale">
+    <div class="container">
+      <div class="flash-header" data-aos="fade-up">
+        <div class="flash-title-wrap">
+          <span class="flash-fire">🔥</span>
+          <h2 class="section-title white">Flash Sale</h2>
+          <span class="flash-tag">Limited Time</span>
+        </div>
+        <div class="countdown-wrap">
+          <span class="countdown-label">Ends In:</span>
+          <div class="countdown">
+            <div class="countdown-unit"><span id="cdHours">00</span><label>Hours</label></div>
+            <div class="countdown-sep">:</div>
+            <div class="countdown-unit"><span id="cdMinutes">00</span><label>Mins</label></div>
+            <div class="countdown-sep">:</div>
+            <div class="countdown-unit"><span id="cdSeconds">00</span><label>Secs</label></div>
+          </div>
+        </div>
+        <a href="#" class="btn-gold">View All</a>
+      </div>
+
+      <div class="products-grid flash-products" id="flashProducts" data-aos="fade-up">
+        <!-- JS will inject -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FOUNDER SECTION ═══════════════ -->
+  <section class="section founder-section" id="founder">
+    <div class="founder-bg-decoration"></div>
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-tag">Leadership</span>
+        <h2 class="section-title">Meet the Visionary</h2>
+      </div>
+
+      <div class="founder-wrap" data-aos="fade-up">
+        <!-- Left: Image -->
+        <div class="founder-image-side">
+          <div class="founder-image-frame">
+            <div class="founder-img-placeholder">
+              <img src="image/IMG_0016.JPG" alt="MD Rakib Babu" class="founder-photo" onerror="this.style.display='none';document.querySelector('.founder-initials').style.display='flex';" />
+              <div class="founder-initials" style="display:none;">RB</div>
+              <div class="founder-img-glow"></div>
+            </div>
+            <div class="founder-img-badge">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#D4AF37"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              CEO & Founder
+            </div>
+            <div class="founder-achievement-ring">
+              <span>🏆</span>
+              <span>💼</span>
+              <span>🚀</span>
+              <span>🌟</span>
+            </div>
+          </div>
+
+          <!-- Social Links -->
+          <div class="founder-socials">
+            <a href="#" class="social-link linkedin" title="LinkedIn">in</a>
+            <a href="#" class="social-link facebook" title="Facebook">f</a>
+            <a href="#" class="social-link twitter" title="Twitter">𝕏</a>
+            <a href="#" class="social-link instagram" title="Instagram">📸</a>
+          </div>
+        </div>
+
+        <!-- Right: Content -->
+        <div class="founder-content-side">
+          <div class="founder-name-block">
+            <h2 class="founder-name">MD Rakib Babu</h2>
+            <p class="founder-title-text">Founder & CEO, LogeAse.com</p>
+            <div class="founder-divider"></div>
+          </div>
+
+          <blockquote class="founder-quote">
+            "My vision is to build one of Bangladesh's most trusted and innovative e-commerce platforms — where quality meets affordability, and every customer feels valued."
+          </blockquote>
+
+          <div class="founder-bio">
+            <p>MD Rakib Babu is the Founder & CEO of LogeAse.com. His vision is to build one of Bangladesh's most trusted and innovative e-commerce platforms, providing customers with quality products, secure shopping, and exceptional service.</p>
+            <p>With deep passion for technology and entrepreneurship, Rakib is transforming how Bangladesh shops online — making premium products accessible to every corner of the country.</p>
+          </div>
+
+          <!-- Achievements -->
+          <div class="founder-achievements">
+            <div class="achievement-item">
+              <strong class="counter" data-target="2">0</strong><span>M+</span>
+              <label>Customers Served</label>
+            </div>
+            <div class="achievement-item">
+              <strong class="counter" data-target="50">0</strong><span>K+</span>
+              <label>Products Listed</label>
+            </div>
+            <div class="achievement-item">
+              <strong class="counter" data-target="500">0</strong><span>+</span>
+              <label>Partner Brands</label>
+            </div>
+            <div class="achievement-item">
+              <strong class="counter" data-target="4">0</strong><span>+</span>
+              <label>Years in Business</label>
+            </div>
+          </div>
+
+          <!-- Vision & Mission -->
+          <div class="vm-cards">
+            <div class="vm-card">
+              <div class="vm-icon">🎯</div>
+              <h4>Our Vision</h4>
+              <p>To become the most trusted and loved e-commerce destination in Bangladesh and beyond.</p>
+            </div>
+            <div class="vm-card">
+              <div class="vm-icon">🚀</div>
+              <h4>Our Mission</h4>
+              <p>Delivering quality products, superior experience, and genuine value to every customer.</p>
+            </div>
+          </div>
+
+          <!-- Signature -->
+          <div class="founder-signature">
+            <div class="signature-text">MD Rakib Babu</div>
+            <span>Founder & CEO, LogeAse.com</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ TRENDING PRODUCTS ═══════════════ -->
+  <section class="section" id="products">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-tag">Hot Right Now</span>
+        <h2 class="section-title">Trending Products</h2>
+        <p class="section-desc">Handpicked bestsellers loved by thousands</p>
+      </div>
+
+      <div class="filter-tabs" data-aos="fade-up">
+        <button class="filter-tab active" onclick="filterProducts('all', this)">All</button>
+        <button class="filter-tab" onclick="filterProducts('electronics', this)">Electronics</button>
+        <button class="filter-tab" onclick="filterProducts('fashion', this)">Fashion</button>
+        <button class="filter-tab" onclick="filterProducts('home', this)">Home & Living</button>
+        <button class="filter-tab" onclick="filterProducts('beauty', this)">Beauty</button>
+      </div>
+
+      <div class="products-grid" id="productsGrid" data-aos="fade-up">
+        <!-- Injected by JS -->
+      </div>
+
+      <div class="load-more-wrap">
+        <button class="btn-outline load-more" onclick="loadMoreProducts()">Load More Products</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ WHY SHOP WITH US ═══════════════ -->
+  <section class="section why-section">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-tag">Our Promise</span>
+        <h2 class="section-title">Why LogeAse?</h2>
+        <p class="section-desc">World-class service, every single time</p>
+      </div>
+      <div class="why-grid" data-aos="fade-up">
+        <div class="why-card">
+          <div class="why-icon" style="--wi:#2563EB">🚀</div>
+          <h3>Fast Delivery</h3>
+          <p>Same-day delivery in Dhaka. Express shipping nationwide within 48 hours.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon" style="--wi:#10B981">🔒</div>
+          <h3>100% Secure Payment</h3>
+          <p>SSL-encrypted checkout. Support for bKash, Nagad, Cards, and COD.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon" style="--wi:#F97316">✅</div>
+          <h3>Trusted Sellers</h3>
+          <p>Every seller is verified. Every product quality-checked before listing.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon" style="--wi:#9333EA">↩️</div>
+          <h3>Easy Returns</h3>
+          <p>Not satisfied? Return within 7 days — no questions asked, full refund.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon" style="--wi:#EC4899">💬</div>
+          <h3>24/7 Support</h3>
+          <p>Our team is always here — via chat, call, or email anytime you need help.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon" style="--wi:#D4AF37">💎</div>
+          <h3>100% Authentic</h3>
+          <p>We guarantee every product is genuine. Fake? Full refund + bonus credit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ TESTIMONIALS ═══════════════ -->
+  <section class="section reviews-section">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-tag">Social Proof</span>
+        <h2 class="section-title">What Our Customers Say</h2>
+        <p class="section-desc">Real reviews from real people</p>
+      </div>
+      <div class="reviews-grid" data-aos="fade-up">
+        <div class="review-card featured">
+          <div class="review-stars">⭐⭐⭐⭐⭐</div>
+          <p class="review-text">"LogeAse has completely changed how I shop. The quality is outstanding, delivery was next-day, and customer support resolved my query in minutes. Absolutely love this platform!"</p>
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:#2563EB">FA</div>
+            <div>
+              <strong>Fatima Akter</strong>
+              <span>Dhaka, Bangladesh</span>
+            </div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">⭐⭐⭐⭐⭐</div>
+          <p class="review-text">"Best online store in Bangladesh! Got my smartphone at the best price with warranty. The packaging was premium. Will definitely buy again from LogeAse!"</p>
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:#F97316">RK</div>
+            <div>
+              <strong>Rahim Karim</strong>
+              <span>Chittagong, Bangladesh</span>
+            </div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">⭐⭐⭐⭐⭐</div>
+          <p class="review-text">"The flash sale was incredible! I saved ৳3,500 on my order. Products are 100% original. LogeAse is now my go-to for everything. Highly recommended!"</p>
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:#10B981">NS</div>
+            <div>
+              <strong>Nusrat Sultana</strong>
+              <span>Sylhet, Bangladesh</span>
+            </div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">⭐⭐⭐⭐⭐</div>
+          <p class="review-text">"Amazing shopping experience! The website is so easy to use and mobile-friendly. Got exactly what I ordered. LogeAse truly delivers on every promise!"</p>
+          <div class="reviewer">
+            <div class="reviewer-avatar" style="background:#9333EA">MH</div>
+            <div>
+              <strong>Mehedi Hasan</strong>
+              <span>Rajshahi, Bangladesh</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PARTNER BRANDS ═══════════════ -->
+  <section class="section brands-section" id="brands">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-tag">Trusted Partners</span>
+        <h2 class="section-title">Our Partner Brands</h2>
+      </div>
+      <div class="brands-carousel-wrap" data-aos="fade-up">
+        <div class="brands-track" id="brandsTrack">
+          <div class="brand-logo">Samsung</div>
+          <div class="brand-logo">Apple</div>
+          <div class="brand-logo">Sony</div>
+          <div class="brand-logo">Nike</div>
+          <div class="brand-logo">Adidas</div>
+          <div class="brand-logo">LG</div>
+          <div class="brand-logo">Dell</div>
+          <div class="brand-logo">HP</div>
+          <div class="brand-logo">Xiaomi</div>
+          <div class="brand-logo">ASUS</div>
+          <div class="brand-logo">Puma</div>
+          <div class="brand-logo">Philips</div>
+          <!-- duplicated for infinite loop -->
+          <div class="brand-logo">Samsung</div>
+          <div class="brand-logo">Apple</div>
+          <div class="brand-logo">Sony</div>
+          <div class="brand-logo">Nike</div>
+          <div class="brand-logo">Adidas</div>
+          <div class="brand-logo">LG</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ STATS ═══════════════ -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item" data-aos="fade-up">
+          <div class="stat-icon">😊</div>
+          <strong class="counter" data-target="2000000">0</strong><span>M+</span>
+          <label>Happy Customers</label>
+        </div>
+        <div class="stat-item" data-aos="fade-up" data-delay="100">
+          <div class="stat-icon">📦</div>
+          <strong class="counter" data-target="5000000">0</strong><span>M+</span>
+          <label>Orders Completed</label>
+        </div>
+        <div class="stat-item" data-aos="fade-up" data-delay="200">
+          <div class="stat-icon">🛍️</div>
+          <strong class="counter" data-target="50000">0</strong><span>K+</span>
+          <label>Products Listed</label>
+        </div>
+        <div class="stat-item" data-aos="fade-up" data-delay="300">
+          <div class="stat-icon">🏷️</div>
+          <strong class="counter" data-target="500">0</strong><span>+</span>
+          <label>Partner Brands</label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ NEWSLETTER ═══════════════ -->
+  <section class="newsletter-section">
+    <div class="container">
+      <div class="newsletter-card" data-aos="fade-up">
+        <div class="newsletter-content">
+          <div class="newsletter-icon">✉️</div>
+          <h2>Get Exclusive Deals & Offers</h2>
+          <p>Subscribe to our newsletter and be the first to know about flash sales, new arrivals, and special promotions.</p>
+          <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+            <input type="email" placeholder="Enter your email address" required />
+            <button type="submit" class="btn-primary">Subscribe Now</button>
+          </form>
+          <p class="newsletter-note">🔒 No spam, ever. Unsubscribe anytime.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="footer" id="contact">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+
+          <!-- Brand Column -->
+          <div class="footer-col brand-col">
+            <a href="#" class="logo footer-logo">
+              <div class="logo-icon">L</div>
+              <div class="logo-text">
+                <span class="logo-main">LogeAse</span>
+                <span class="logo-dot">.com</span>
+              </div>
+            </a>
+            <p class="footer-brand-desc">Bangladesh's premium e-commerce destination. Quality products, secure shopping, exceptional service — every time.</p>
+            <div class="footer-socials">
+              <a href="#" class="footer-social">f</a>
+              <a href="#" class="footer-social">in</a>
+              <a href="#" class="footer-social">𝕏</a>
+              <a href="#" class="footer-social">▶</a>
+            </div>
+            <div class="footer-apps">
+              <a href="#" class="app-badge">📱 App Store</a>
+              <a href="#" class="app-badge">🤖 Google Play</a>
+            </div>
+          </div>
+
+          <!-- Shop Column -->
+          <div class="footer-col">
+            <h4>Shop</h4>
+            <a href="#">Electronics</a>
+            <a href="#">Fashion</a>
+            <a href="#">Home & Living</a>
+            <a href="#">Beauty & Health</a>
+            <a href="#">Sports & Fitness</a>
+            <a href="#">Books & Stationery</a>
+          </div>
+
+          <!-- Company Column -->
+          <div class="footer-col">
+            <h4>Company</h4>
+            <a href="#">About LogeAse</a>
+            <a href="#founder">Meet the Founder</a>
+            <a href="#">Careers</a>
+            <a href="#">Press & Media</a>
+            <a href="#">Investor Relations</a>
+            <a href="#">Sustainability</a>
+          </div>
+
+          <!-- Support Column -->
+          <div class="footer-col">
+            <h4>Support</h4>
+            <a href="#">Help Center</a>
+            <a href="#">Track Your Order</a>
+            <a href="#">Returns & Refunds</a>
+            <a href="#">Seller Center</a>
+            <a href="#">Affiliate Program</a>
+            <a href="#">Privacy Policy</a>
+          </div>
+
+          <!-- Contact Column -->
+          <div class="footer-col">
+            <h4>Contact Us</h4>
+            <div class="footer-contact-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Dhaka, Bangladesh</span>
+            </div>
+            <div class="footer-contact-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 012 2.22 2 2 0 013.98 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              <span>+880 1700-000000</span>
+            </div>
+            <div class="footer-contact-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <span>support@logease.com</span>
+            </div>
+            <div class="payment-methods">
+              <span class="payment-badge">bKash</span>
+              <span class="payment-badge">Nagad</span>
+              <span class="payment-badge">VISA</span>
+              <span class="payment-badge">MasterCard</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2024 LogeAse.com — All Rights Reserved. Founded by <strong>MD Rakib Babu</strong>.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Terms</a>
+          <a href="#">Privacy</a>
+          <a href="#">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════ BACK TO TOP ═══════════════ -->
+  <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
