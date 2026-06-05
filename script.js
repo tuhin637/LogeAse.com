@@ -854,3 +854,161 @@ window.addEventListener('load', () => {
   });
   injectProductCardStyles();
 });
+
+/* ══════════════════════════════════════
+   AUTH SYSTEM
+══════════════════════════════════════ */
+let currentUser = JSON.parse(localStorage.getItem('logeaseUser') || 'null');
+
+// Init auth state on load
+document.addEventListener('DOMContentLoaded', () => {
+  updateAuthUI();
+  // Close dropdown on outside click
+  document.addEventListener('click', e => {
+    const btn = document.getElementById('userBtn');
+    const dd = document.getElementById('userDropdown');
+    if (dd && btn && !btn.contains(e.target) && !dd.contains(e.target)) {
+      dd.style.display = 'none';
+    }
+  });
+});
+
+function openAuthModal(tab = 'login') {
+  if (currentUser) {
+    // If logged in, toggle dropdown instead
+    const dd = document.getElementById('userDropdown');
+    if (dd) dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+    return;
+  }
+  document.getElementById('authOverlay').classList.add('open');
+  document.getElementById('authModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  switchTab(tab);
+}
+
+function closeAuthModal() {
+  document.getElementById('authOverlay').classList.remove('open');
+  document.getElementById('authModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function switchTab(tab) {
+  const isLogin = tab === 'login';
+  document.getElementById('tabLogin').classList.toggle('active', isLogin);
+  document.getElementById('tabRegister').classList.toggle('active', !isLogin);
+  document.getElementById('panelLogin').style.display = isLogin ? 'block' : 'none';
+  document.getElementById('panelRegister').style.display = isLogin ? 'none' : 'block';
+}
+
+function togglePassword(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const isText = input.type === 'text';
+  input.type = isText ? 'password' : 'text';
+  btn.innerHTML = isText
+    ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`
+    : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+}
+
+function checkPasswordStrength(pass) {
+  const fill = document.getElementById('strengthFill');
+  const label = document.getElementById('strengthLabel');
+  if (!fill || !label) return;
+  let score = 0;
+  if (pass.length >= 8) score++;
+  if (/[A-Z]/.test(pass)) score++;
+  if (/[0-9]/.test(pass)) score++;
+  if (/[^A-Za-z0-9]/.test(pass)) score++;
+  const configs = [
+    { w: '0%',   color: '#e2e8f0', text: '' },
+    { w: '25%',  color: '#ef4444', text: 'Weak' },
+    { w: '50%',  color: '#f97316', text: 'Fair' },
+    { w: '75%',  color: '#eab308', text: 'Good' },
+    { w: '100%', color: '#22c55e', text: 'Strong' },
+  ];
+  const cfg = configs[score];
+  fill.style.width = cfg.w;
+  fill.style.background = cfg.color;
+  label.textContent = cfg.text;
+  label.style.color = cfg.color;
+}
+
+function handleLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPassword').value;
+  if (!email || !pass) { showToast('⚠️ Please fill in all fields', 'warn'); return; }
+  if (!isValidEmail(email)) { showToast('⚠️ Enter a valid email', 'warn'); return; }
+  if (pass.length < 4) { showToast('⚠️ Password too short', 'warn'); return; }
+  // Simulate login
+  const name = email.split('@')[0];
+  loginUser({ name: capitalize(name), email });
+}
+
+function handleRegister() {
+  const first   = document.getElementById('regFirst').value.trim();
+  const last    = document.getElementById('regLast').value.trim();
+  const email   = document.getElementById('regEmail').value.trim();
+  const phone   = document.getElementById('regPhone').value.trim();
+  const pass    = document.getElementById('regPassword').value;
+  const confirm = document.getElementById('regConfirm').value;
+  const agreed  = document.getElementById('agreeTerms').checked;
+  if (!first || !email || !pass) { showToast('⚠️ Please fill in required fields', 'warn'); return; }
+  if (!isValidEmail(email)) { showToast('⚠️ Enter a valid email', 'warn'); return; }
+  if (pass.length < 8) { showToast('⚠️ Password must be at least 8 characters', 'warn'); return; }
+  if (pass !== confirm) { showToast('⚠️ Passwords do not match', 'warn'); return; }
+  if (!agreed) { showToast('⚠️ Please agree to Terms & Conditions', 'warn'); return; }
+  loginUser({ name: `${first} ${last}`.trim(), email, phone });
+}
+
+function loginUser(user) {
+  currentUser = user;
+  localStorage.setItem('logeaseUser', JSON.stringify(user));
+  updateAuthUI();
+  closeAuthModal();
+  showToast(`🎉 Welcome, ${user.name.split(' ')[0]}!`);
+}
+
+function logoutUser() {
+  currentUser = null;
+  localStorage.removeItem('logeaseUser');
+  updateAuthUI();
+  document.getElementById('userDropdown').style.display = 'none';
+  showToast('👋 Logged out successfully');
+}
+
+function socialLogin(provider) {
+  const user = { name: 'Demo User', email: `demo@${provider.toLowerCase()}.com` };
+  loginUser(user);
+}
+
+function showForgotPassword() {
+  closeAuthModal();
+  setTimeout(() => showToast('📧 Password reset link sent! (demo)', 'warn'), 200);
+}
+
+function updateAuthUI() {
+  const btn = document.getElementById('userBtn');
+  const dd  = document.getElementById('userDropdown');
+  if (!btn) return;
+  if (currentUser) {
+    const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
+    btn.innerHTML = `<div class="user-avatar-sm">${initials}</div>`;
+    if (dd) {
+      document.getElementById('dropdownAvatar').textContent = initials;
+      document.getElementById('dropdownName').textContent = currentUser.name;
+      document.getElementById('dropdownEmail').textContent = currentUser.email;
+      dd.style.display = 'none';
+    }
+  } else {
+    btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+    if (dd) dd.style.display = 'none';
+  }
+}
+
+// ESC key close auth modal
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeAuthModal();
+});
+
+function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
