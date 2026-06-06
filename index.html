@@ -71,16 +71,40 @@
           <div class="user-dropdown-inner">
             <div class="user-dropdown-profile">
               <div class="user-avatar-lg" id="dropdownAvatar">R</div>
-              <div>
+              <div class="user-dd-info">
                 <div class="user-dd-name" id="dropdownName">User</div>
                 <div class="user-dd-email" id="dropdownEmail">user@email.com</div>
               </div>
             </div>
             <div class="user-dropdown-links">
-              <a href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> My Profile</a>
-              <a href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> My Orders</a>
-              <a href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg> Wishlist</a>
-              <a href="#" onclick="logoutUser()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Logout</a>
+              <a href="#" onclick="openProfileModal('profile'); return false;">
+                <div class="ud-link-icon" style="background:rgba(37,99,235,0.1)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                My Profile
+                <svg class="ud-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </a>
+              <a href="#" onclick="openProfileModal('orders'); return false;">
+                <div class="ud-link-icon" style="background:rgba(249,115,22,0.1)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                </div>
+                My Orders
+                <svg class="ud-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </a>
+              <a href="#" onclick="openProfileModal('wishlist'); return false;">
+                <div class="ud-link-icon" style="background:rgba(236,72,153,0.1)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                </div>
+                Wishlist
+                <span class="ud-badge" id="udWishlistCount">0</span>
+                <svg class="ud-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </a>
+              <a href="#" onclick="logoutUser(); return false;" class="ud-logout">
+                <div class="ud-link-icon" style="background:rgba(239,68,68,0.1)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                </div>
+                Logout
+              </a>
             </div>
           </div>
         </div>
@@ -182,7 +206,7 @@
         <span>Total:</span>
         <strong id="cartTotal">৳0</strong>
       </div>
-      <button class="btn-primary full-width">Proceed to Checkout</button>
+      <button class="btn-primary full-width" onclick="openPaymentModal()">Proceed to Checkout</button>
     </div>
   </div>
 
@@ -872,6 +896,388 @@
   </footer>
 
   <!-- ═══════════════ BACK TO TOP ═══════════════ -->
+  <!-- ═══════════════ PAYMENT MODAL ═══════════════ -->
+  <div class="payment-overlay" id="paymentOverlay" onclick="closePaymentModal()"></div>
+  <div class="payment-modal" id="paymentModal">
+    <div class="payment-modal-inner">
+
+      <!-- Header -->
+      <div class="pm-header">
+        <div class="pm-header-left">
+          <div class="pm-lock-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
+          <div>
+            <h2 class="pm-title">Secure Checkout</h2>
+            <p class="pm-subtitle">SSL Encrypted & 100% Safe</p>
+          </div>
+        </div>
+        <button class="pm-close" onclick="closePaymentModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Order Summary Strip -->
+      <div class="pm-order-strip">
+        <div class="pm-order-info">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span id="pmItemCount">0 item(s)</span>
+        </div>
+        <div class="pm-order-total">
+          Total: <strong id="pmOrderTotal">৳0</strong>
+        </div>
+      </div>
+
+      <!-- Step Indicator -->
+      <div class="pm-steps">
+        <div class="pm-step active" id="pmStep1"><span>1</span> Payment</div>
+        <div class="pm-step-line"></div>
+        <div class="pm-step" id="pmStep2"><span>2</span> Details</div>
+        <div class="pm-step-line"></div>
+        <div class="pm-step" id="pmStep3"><span>3</span> Confirm</div>
+      </div>
+
+      <!-- ── PANEL 1: Choose Payment Method ── -->
+      <div class="pm-panel" id="pmPanel1">
+        <h3 class="pm-section-title">Choose Payment Method</h3>
+
+        <div class="pm-methods-grid">
+
+          <!-- bKash -->
+          <label class="pm-method-card" data-method="bkash">
+            <input type="radio" name="payMethod" value="bkash" />
+            <div class="pm-method-logo bkash-logo">
+              <svg width="28" height="28" viewBox="0 0 60 60"><circle cx="30" cy="30" r="30" fill="#E2136E"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="11" font-weight="bold" font-family="Arial">bKash</text></svg>
+            </div>
+            <div class="pm-method-info">
+              <strong>bKash</strong>
+              <span>Mobile Banking</span>
+            </div>
+            <div class="pm-method-check">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </label>
+
+          <!-- Nagad -->
+          <label class="pm-method-card" data-method="nagad">
+            <input type="radio" name="payMethod" value="nagad" />
+            <div class="pm-method-logo nagad-logo">
+              <svg width="28" height="28" viewBox="0 0 60 60"><circle cx="30" cy="30" r="30" fill="#F6821F"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="11" font-weight="bold" font-family="Arial">Nagad</text></svg>
+            </div>
+            <div class="pm-method-info">
+              <strong>Nagad</strong>
+              <span>Mobile Banking</span>
+            </div>
+            <div class="pm-method-check">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </label>
+
+          <!-- Rocket -->
+          <label class="pm-method-card" data-method="rocket">
+            <input type="radio" name="payMethod" value="rocket" />
+            <div class="pm-method-logo rocket-logo">
+              <svg width="28" height="28" viewBox="0 0 60 60"><circle cx="30" cy="30" r="30" fill="#8C3494"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="10" font-weight="bold" font-family="Arial">Rocket</text></svg>
+            </div>
+            <div class="pm-method-info">
+              <strong>Rocket</strong>
+              <span>DBBL Mobile</span>
+            </div>
+            <div class="pm-method-check">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </label>
+
+          <!-- Card -->
+          <label class="pm-method-card" data-method="card">
+            <input type="radio" name="payMethod" value="card" />
+            <div class="pm-method-logo card-logo">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1a56db" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="3"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </div>
+            <div class="pm-method-info">
+              <strong>Debit / Credit Card</strong>
+              <span>VISA, Mastercard</span>
+            </div>
+            <div class="pm-method-check">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </label>
+
+          <!-- Cash on Delivery -->
+          <label class="pm-method-card" data-method="cod">
+            <input type="radio" name="payMethod" value="cod" />
+            <div class="pm-method-logo cod-logo">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            </div>
+            <div class="pm-method-info">
+              <strong>Cash on Delivery</strong>
+              <span>Pay when received</span>
+            </div>
+            <div class="pm-method-check">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </label>
+
+        </div>
+
+        <button class="pm-next-btn" onclick="pmGoToStep2()">
+          Continue
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+
+      <!-- ── PANEL 2: Payment Details ── -->
+      <div class="pm-panel" id="pmPanel2" style="display:none">
+
+        <!-- Mobile Banking Fields (bKash/Nagad/Rocket) -->
+        <div id="pmMobileFields" style="display:none">
+          <div class="pm-method-banner" id="pmMethodBanner"></div>
+          <div class="pm-info-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div>
+              <strong>Send money to: <span id="pmMerchantNum">01700-000000</span></strong>
+              <p>Send the exact amount and enter your transaction ID below</p>
+            </div>
+          </div>
+          <div class="pm-field">
+            <label>Your <span id="pmMethodLabel">bKash</span> Number</label>
+            <div class="pm-input-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a2 2 0 012-2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6z"/></svg>
+              <input type="tel" id="pmMobileNum" placeholder="01XXXXXXXXX" maxlength="11" />
+            </div>
+          </div>
+          <div class="pm-field">
+            <label>Transaction ID (TrxID)</label>
+            <div class="pm-input-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+              <input type="text" id="pmTrxId" placeholder="e.g. ABC123XY89" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Fields -->
+        <div id="pmCardFields" style="display:none">
+          <div class="pm-card-logos">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/200px-Visa_Inc._logo.svg.png" alt="VISA" height="22">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/200px-Mastercard-logo.svg.png" alt="MC" height="28">
+          </div>
+          <div class="pm-field">
+            <label>Card Number</label>
+            <div class="pm-input-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="3"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              <input type="text" id="pmCardNum" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCardNum(this)" />
+            </div>
+          </div>
+          <div class="pm-fields-row">
+            <div class="pm-field">
+              <label>Expiry Date</label>
+              <div class="pm-input-wrap">
+                <input type="text" id="pmExpiry" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)" />
+              </div>
+            </div>
+            <div class="pm-field">
+              <label>CVV</label>
+              <div class="pm-input-wrap">
+                <input type="password" id="pmCvv" placeholder="•••" maxlength="4" />
+              </div>
+            </div>
+          </div>
+          <div class="pm-field">
+            <label>Cardholder Name</label>
+            <div class="pm-input-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input type="text" id="pmCardName" placeholder="Name on card" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Cash on Delivery Fields -->
+        <div id="pmCodFields" style="display:none">
+          <div class="pm-cod-banner">
+            <div class="pm-cod-icon">💵</div>
+            <div>
+              <strong>Cash on Delivery</strong>
+              <p>Pay in cash when your order arrives at your doorstep</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Common: Delivery Address -->
+        <h3 class="pm-section-title" style="margin-top:20px">Delivery Address</h3>
+        <div class="pm-field">
+          <label>Full Name</label>
+          <div class="pm-input-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" id="pmFullName" placeholder="আপনার পুরো নাম" />
+          </div>
+        </div>
+        <div class="pm-field">
+          <label>Phone Number</label>
+          <div class="pm-input-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a2 2 0 012-2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6z"/></svg>
+            <input type="tel" id="pmPhone" placeholder="01XXXXXXXXX" />
+          </div>
+        </div>
+        <div class="pm-field">
+          <label>Full Address</label>
+          <div class="pm-input-wrap textarea-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <textarea id="pmAddress" placeholder="বাড়ি নং, রোড, এলাকা, শহর" rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="pm-btn-row">
+          <button class="pm-back-btn" onclick="pmGoToStep1()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+          <button class="pm-next-btn" onclick="pmGoToStep3()" style="flex:1">
+            Review Order
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── PANEL 3: Order Confirmation ── -->
+      <div class="pm-panel" id="pmPanel3" style="display:none">
+        <h3 class="pm-section-title">Order Summary</h3>
+        <div class="pm-confirm-box" id="pmConfirmBox"></div>
+
+        <div class="pm-trust-row">
+          <span>🔒 SSL Secured</span>
+          <span>✅ 100% Authentic</span>
+          <span>↩️ 7-Day Return</span>
+        </div>
+
+        <button class="pm-place-btn" id="pmPlaceBtn" onclick="placeOrder()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Place Order Now
+        </button>
+        <button class="pm-back-btn" onclick="pmGoToStep2()" style="width:100%;margin-top:10px;justify-content:center;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Edit Details
+        </button>
+      </div>
+
+      <!-- ── SUCCESS Panel ── -->
+      <div class="pm-panel" id="pmPanelSuccess" style="display:none">
+        <div class="pm-success">
+          <div class="pm-success-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h2>Order Placed! 🎉</h2>
+          <p>আপনার অর্ডার সফলভাবে নেওয়া হয়েছে।<br/>শীঘ্রই আপনার সাথে যোগাযোগ করা হবে।</p>
+          <div class="pm-order-id">Order ID: <strong id="pmOrderId"></strong></div>
+          <button class="pm-place-btn" onclick="closePaymentModal()" style="margin-top:20px">
+            Continue Shopping 🛍️
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════ PROFILE MODAL ═══════════════ -->
+  <div class="profile-overlay" id="profileOverlay" onclick="closeProfileModal()"></div>
+  <div class="profile-modal" id="profileModal">
+    <div class="profile-modal-inner">
+
+      <!-- Sidebar -->
+      <div class="pm-sidebar">
+        <div class="pm-sidebar-user">
+          <div class="pm-sidebar-avatar" id="sidebarAvatar">R</div>
+          <div>
+            <div class="pm-sidebar-name" id="sidebarName">User</div>
+            <div class="pm-sidebar-email" id="sidebarEmail">user@email.com</div>
+          </div>
+        </div>
+        <nav class="pm-sidebar-nav">
+          <a href="#" class="pm-nav-item active" data-tab="profile" onclick="switchProfileTab('profile'); return false;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            My Profile
+          </a>
+          <a href="#" class="pm-nav-item" data-tab="orders" onclick="switchProfileTab('orders'); return false;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            My Orders
+            <span class="pm-nav-count" id="ordersNavCount">0</span>
+          </a>
+          <a href="#" class="pm-nav-item" data-tab="wishlist" onclick="switchProfileTab('wishlist'); return false;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            Wishlist
+            <span class="pm-nav-count" id="wishlistNavCount">0</span>
+          </a>
+        </nav>
+        <button class="pm-sidebar-logout" onclick="logoutUser(); closeProfileModal();">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </button>
+      </div>
+
+      <!-- Main Content -->
+      <div class="pm-content">
+        <button class="pm-modal-close" onclick="closeProfileModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Profile Tab -->
+        <div class="pm-tab-content" id="tabProfile">
+          <h2 class="pm-content-title">My Profile</h2>
+          <div class="pm-profile-card">
+            <div class="pm-profile-avatar-wrap">
+              <div class="pm-profile-avatar" id="profileAvatar">R</div>
+              <div class="pm-profile-avatar-edit">📷</div>
+            </div>
+            <div class="pm-profile-fields">
+              <div class="pm-profile-field">
+                <label>Full Name</label>
+                <div class="pm-profile-value" id="profileName">—</div>
+              </div>
+              <div class="pm-profile-field">
+                <label>Email Address</label>
+                <div class="pm-profile-value" id="profileEmail">—</div>
+              </div>
+              <div class="pm-profile-field">
+                <label>Phone Number</label>
+                <div class="pm-profile-value" id="profilePhone">—</div>
+              </div>
+              <div class="pm-profile-field">
+                <label>Member Since</label>
+                <div class="pm-profile-value" id="profileJoined">—</div>
+              </div>
+            </div>
+          </div>
+          <div class="pm-stats-row">
+            <div class="pm-stat-box">
+              <strong id="statOrders">0</strong>
+              <span>Orders</span>
+            </div>
+            <div class="pm-stat-box">
+              <strong id="statWishlist">0</strong>
+              <span>Wishlist</span>
+            </div>
+            <div class="pm-stat-box">
+              <strong>4.9⭐</strong>
+              <span>Rating</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div class="pm-tab-content" id="tabOrders" style="display:none">
+          <h2 class="pm-content-title">My Orders</h2>
+          <div id="ordersContainer"></div>
+        </div>
+
+        <!-- Wishlist Tab -->
+        <div class="pm-tab-content" id="tabWishlist" style="display:none">
+          <h2 class="pm-content-title">My Wishlist</h2>
+          <div id="wishlistContainer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
   </button>

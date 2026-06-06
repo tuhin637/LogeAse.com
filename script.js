@@ -1012,3 +1012,375 @@ document.addEventListener('keydown', e => {
 
 function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
 function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+/* ══════════════════════════════════════
+   PAYMENT MODAL SYSTEM
+══════════════════════════════════════ */
+let selectedPayMethod = null;
+
+// Open payment modal
+function openPaymentModal() {
+  if (cart.length === 0) {
+    showToast('🛒 Your cart is empty!', 'warn');
+    return;
+  }
+  // ── Login required ──
+  if (!currentUser) {
+    // Close cart drawer first
+    const drawer = document.getElementById('cartDrawer');
+    if (drawer?.classList.contains('open')) toggleCart();
+    setTimeout(() => {
+      openAuthModal('login');
+      showToast('🔒 Please login to proceed to checkout', 'warn');
+    }, 300);
+    return;
+  }
+  const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+  const count = cart.reduce((sum, i) => sum + i.qty, 0);
+
+  document.getElementById('pmItemCount').textContent = count + ' item(s)';
+  document.getElementById('pmOrderTotal').textContent = '৳' + total.toLocaleString();
+
+  // Reset to step 1
+  pmGoToPanel('pmPanel1');
+  updatePmSteps(1);
+  selectedPayMethod = null;
+  document.querySelectorAll('.pm-method-card').forEach(c => c.classList.remove('selected'));
+
+  document.getElementById('paymentOverlay').classList.add('open');
+  document.getElementById('paymentModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Setup method card click events
+  document.querySelectorAll('.pm-method-card').forEach(card => {
+    card.onclick = () => {
+      document.querySelectorAll('.pm-method-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedPayMethod = card.dataset.method;
+    };
+  });
+}
+
+function closePaymentModal() {
+  document.getElementById('paymentOverlay').classList.remove('open');
+  document.getElementById('paymentModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Step navigation helpers
+function pmGoToPanel(panelId) {
+  ['pmPanel1','pmPanel2','pmPanel3','pmPanelSuccess'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  const target = document.getElementById(panelId);
+  if (target) target.style.display = 'block';
+}
+
+function updatePmSteps(active) {
+  [1,2,3].forEach(n => {
+    const el = document.getElementById('pmStep' + n);
+    if (!el) return;
+    el.classList.remove('active','done');
+    if (n < active) el.classList.add('done');
+    else if (n === active) el.classList.add('active');
+  });
+  // Step lines
+  document.querySelectorAll('.pm-step-line').forEach((line, i) => {
+    line.classList.toggle('done', active > i + 1);
+  });
+}
+
+function pmGoToStep1() {
+  pmGoToPanel('pmPanel1');
+  updatePmSteps(1);
+}
+
+function pmGoToStep2() {
+  if (!selectedPayMethod) {
+    showToast('⚠️ Please select a payment method', 'warn');
+    return;
+  }
+  pmGoToPanel('pmPanel2');
+  updatePmSteps(2);
+  loadPaymentFields();
+}
+
+function pmGoToStep3() {
+  // Validate
+  const name = document.getElementById('pmFullName')?.value?.trim();
+  const phone = document.getElementById('pmPhone')?.value?.trim();
+  const address = document.getElementById('pmAddress')?.value?.trim();
+  if (!name || !phone || !address) {
+    showToast('⚠️ Please fill in delivery details', 'warn');
+    return;
+  }
+  if (selectedPayMethod === 'bkash' || selectedPayMethod === 'nagad' || selectedPayMethod === 'rocket') {
+    const mobileNum = document.getElementById('pmMobileNum')?.value?.trim();
+    const trxId = document.getElementById('pmTrxId')?.value?.trim();
+    if (!mobileNum || !trxId) {
+      showToast('⚠️ Please enter your number and TrxID', 'warn');
+      return;
+    }
+  }
+  if (selectedPayMethod === 'card') {
+    const cardNum = document.getElementById('pmCardNum')?.value?.trim();
+    const expiry = document.getElementById('pmExpiry')?.value?.trim();
+    const cvv = document.getElementById('pmCvv')?.value?.trim();
+    const cardName = document.getElementById('pmCardName')?.value?.trim();
+    if (!cardNum || !expiry || !cvv || !cardName) {
+      showToast('⚠️ Please fill in all card details', 'warn');
+      return;
+    }
+  }
+
+  pmGoToPanel('pmPanel3');
+  updatePmSteps(3);
+  buildConfirmBox();
+}
+
+function loadPaymentFields() {
+  // Hide all
+  ['pmMobileFields','pmCardFields','pmCodFields'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+
+  const methodConfig = {
+    bkash:  { color: '#E2136E', label: 'bKash', merchant: '01700-000000 (bKash)' },
+    nagad:  { color: '#F6821F', label: 'Nagad', merchant: '01700-000000 (Nagad)' },
+    rocket: { color: '#8C3494', label: 'Rocket', merchant: '01700-000000 (Rocket)' },
+  };
+
+  if (methodConfig[selectedPayMethod]) {
+    const cfg = methodConfig[selectedPayMethod];
+    document.getElementById('pmMobileFields').style.display = 'block';
+    document.getElementById('pmMethodLabel').textContent = cfg.label;
+    document.getElementById('pmMerchantNum').textContent = cfg.merchant;
+    const banner = document.getElementById('pmMethodBanner');
+    banner.style.background = 'linear-gradient(135deg, ' + cfg.color + ', ' + cfg.color + 'cc)';
+    banner.textContent = '💳 ' + cfg.label + ' Payment Selected';
+  } else if (selectedPayMethod === 'card') {
+    document.getElementById('pmCardFields').style.display = 'block';
+  } else if (selectedPayMethod === 'cod') {
+    document.getElementById('pmCodFields').style.display = 'block';
+  }
+}
+
+function buildConfirmBox() {
+  const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+  const count = cart.reduce((sum, i) => sum + i.qty, 0);
+  const name = document.getElementById('pmFullName')?.value?.trim();
+  const phone = document.getElementById('pmPhone')?.value?.trim();
+  const address = document.getElementById('pmAddress')?.value?.trim();
+
+  const methodNames = {
+    bkash: '💳 bKash', nagad: '💳 Nagad',
+    rocket: '💳 Rocket', card: '💳 Card', cod: '💵 Cash on Delivery'
+  };
+
+  const items = cart.map(i => `${i.name} × ${i.qty}`).join(', ');
+
+  const html = `
+    <div class="pm-confirm-row"><span class="label">Items (${count})</span><span class="val">${items}</span></div>
+    <div class="pm-confirm-row"><span class="label">Payment</span><span class="val">${methodNames[selectedPayMethod] || selectedPayMethod}</span></div>
+    <div class="pm-confirm-row"><span class="label">Recipient</span><span class="val">${name}</span></div>
+    <div class="pm-confirm-row"><span class="label">Phone</span><span class="val">${phone}</span></div>
+    <div class="pm-confirm-row"><span class="label">Address</span><span class="val">${address}</span></div>
+    <div class="pm-confirm-row total-row"><span class="label">Total Amount</span><span class="val">৳${total.toLocaleString()}</span></div>
+  `;
+  document.getElementById('pmConfirmBox').innerHTML = html;
+}
+
+function placeOrder() {
+  const btn = document.getElementById('pmPlaceBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/></svg> Processing...';
+  btn.style.opacity = '0.7';
+
+  setTimeout(() => {
+    // Generate order ID
+    const orderId = 'LE-' + Date.now().toString().slice(-6) + '-' + Math.floor(Math.random() * 1000);
+    document.getElementById('pmOrderId').textContent = orderId;
+
+    // Clear cart
+    cart = [];
+    saveCart();
+    updateCartUI();
+
+    // Show success
+    pmGoToPanel('pmPanelSuccess');
+    // Reset button
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Place Order Now';
+    btn.style.opacity = '1';
+
+    showToast('🎉 Order placed successfully!');
+  }, 1800);
+}
+
+// Card number formatter: 0000 0000 0000 0000
+function formatCardNum(input) {
+  let v = input.value.replace(/\D/g, '').slice(0, 16);
+  input.value = v.replace(/(.{4})/g, '$1 ').trim();
+}
+
+// Expiry formatter: MM / YY
+function formatExpiry(input) {
+  let v = input.value.replace(/\D/g, '').slice(0, 4);
+  if (v.length >= 3) v = v.slice(0,2) + ' / ' + v.slice(2);
+  input.value = v;
+}
+
+// Close on ESC
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closePaymentModal();
+});
+
+/* ══════════════════════════════════════
+   PROFILE MODAL SYSTEM
+══════════════════════════════════════ */
+let orderHistory = JSON.parse(localStorage.getItem('logeaseOrders') || '[]');
+
+function openProfileModal(tab = 'profile') {
+  if (!currentUser) { openAuthModal('login'); return; }
+
+  // Close user dropdown
+  const dd = document.getElementById('userDropdown');
+  if (dd) dd.style.display = 'none';
+
+  // Fill sidebar info
+  const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
+  const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  setTxt('sidebarAvatar', initials);
+  setTxt('sidebarName', currentUser.name);
+  setTxt('sidebarEmail', currentUser.email || '');
+  setTxt('profileAvatar', initials);
+  setTxt('profileName', currentUser.name);
+  setTxt('profileEmail', currentUser.email || '—');
+  setTxt('profilePhone', currentUser.phone || 'Not set');
+  setTxt('profileJoined', currentUser.joinedDate || new Date().toLocaleDateString('en-BD', { year:'numeric', month:'long' }));
+  setTxt('statOrders', orderHistory.length);
+  setTxt('statWishlist', wishlist.length);
+  setTxt('ordersNavCount', orderHistory.length);
+  setTxt('wishlistNavCount', wishlist.length);
+  setTxt('udWishlistCount', wishlist.length);
+
+  switchProfileTab(tab);
+
+  document.getElementById('profileOverlay').classList.add('open');
+  document.getElementById('profileModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProfileModal() {
+  document.getElementById('profileOverlay').classList.remove('open');
+  document.getElementById('profileModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function switchProfileTab(tab) {
+  // Nav items
+  document.querySelectorAll('.pm-nav-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.tab === tab);
+  });
+  // Tab contents
+  ['profile','orders','wishlist'].forEach(t => {
+    const el = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+    if (el) el.style.display = t === tab ? 'block' : 'none';
+  });
+  if (tab === 'orders') renderProfileOrders();
+  if (tab === 'wishlist') renderProfileWishlist();
+}
+
+function renderProfileOrders() {
+  const container = document.getElementById('ordersContainer');
+  if (!container) return;
+  if (orderHistory.length === 0) {
+    container.innerHTML = `<div class="pm-empty-state"><div>📦</div><p>No orders yet. Start shopping!</p></div>`;
+    return;
+  }
+  container.innerHTML = orderHistory.slice().reverse().map(order => `
+    <div class="pm-order-card">
+      <div class="pm-order-card-header">
+        <div class="pm-order-id-text">Order <strong>${order.id}</strong></div>
+        <span class="pm-order-status status-${order.status.toLowerCase()}">${order.status}</span>
+      </div>
+      <div class="pm-order-items">${order.items}</div>
+      <div class="pm-order-footer">
+        <div class="pm-order-total-text">৳${order.total.toLocaleString()}</div>
+        <div class="pm-order-date">${order.date}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderProfileWishlist() {
+  const container = document.getElementById('wishlistContainer');
+  if (!container) return;
+  if (wishlist.length === 0) {
+    container.innerHTML = `<div class="pm-empty-state"><div>💔</div><p>Your wishlist is empty.</p></div>`;
+    return;
+  }
+  const items = wishlist.map(id => [...PRODUCTS, ...FLASH_PRODUCTS].find(p => p.id === id)).filter(Boolean);
+  container.innerHTML = `<div class="pm-wishlist-grid">` + items.map(p => `
+    <div class="pm-wl-card">
+      <div class="pm-wl-img">
+        ${p.img ? `<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">` : p.emoji}
+      </div>
+      <div class="pm-wl-info">
+        <div class="pm-wl-name">${p.name}</div>
+        <div class="pm-wl-price">৳${p.price.toLocaleString()}</div>
+        <div class="pm-wl-actions">
+          <button class="pm-wl-cart-btn" onclick="addToCart(${p.id}); showToast('🛒 Added to cart!')">Add to Cart</button>
+          <button class="pm-wl-remove-btn" onclick="toggleWishlist(${p.id}); renderProfileWishlist(); document.getElementById('wishlistNavCount').textContent = wishlist.length; document.getElementById('udWishlistCount').textContent = wishlist.length;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>`).join('') + `</div>`;
+}
+
+// Override loginUser to save join date and update wishlist badge
+const _origLoginUser = loginUser;
+loginUser = function(user) {
+  if (!user.joinedDate) user.joinedDate = new Date().toLocaleDateString('en-BD', { year:'numeric', month:'long' });
+  _origLoginUser(user);
+  const el = document.getElementById('udWishlistCount');
+  if (el) el.textContent = wishlist.length;
+};
+
+// Override placeOrder to save to order history
+const _origPlaceOrder = placeOrder;
+placeOrder = function() {
+  const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+  const items = cart.map(i => `${i.name} ×${i.qty}`).join(', ');
+  const orderId = 'LE-' + Date.now().toString().slice(-6) + '-' + Math.floor(Math.random() * 1000);
+
+  const btn = document.getElementById('pmPlaceBtn');
+  if (btn) { btn.disabled = true; btn.style.opacity = '0.7'; btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/></svg> Processing...'; }
+
+  setTimeout(() => {
+    // Save order
+    orderHistory.push({
+      id: orderId,
+      items: items,
+      total: total,
+      date: new Date().toLocaleDateString('en-BD', { year:'numeric', month:'short', day:'numeric' }),
+      status: 'Processing',
+      method: selectedPayMethod
+    });
+    localStorage.setItem('logeaseOrders', JSON.stringify(orderHistory));
+
+    // Show success
+    document.getElementById('pmOrderId').textContent = orderId;
+    cart = []; saveCart(); updateCartUI();
+    pmGoToPanel('pmPanelSuccess');
+
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Place Order Now'; }
+    showToast('🎉 Order placed successfully!');
+  }, 1800);
+};
+
+// ESC key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeProfileModal();
+});
